@@ -37,8 +37,8 @@ export default function Navbar() {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-white/80 backdrop-blur-sm'
+          ? 'bg-white/85 backdrop-blur-xl shadow-[0_8px_30px_rgba(45,45,45,0.14)]'
+          : 'bg-white/55 backdrop-blur-md shadow-[0_4px_22px_rgba(45,45,45,0.10)]'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +59,7 @@ export default function Navbar() {
                   <FaHeart />
                 </motion.div>
               </div>
-              <span className="font-display font-bold text-xl text-brand-dark tracking-tight">
+              <span className="font-display font-bold text-xl text-brand-dark tracking-tight drop-shadow-sm">
                 Traveling <span className="text-brand-primary">Heart</span>
               </span>
             </motion.div>
@@ -74,7 +74,7 @@ export default function Navbar() {
                 className={`relative px-4 py-2 text-sm font-medium transition-colors ${
                   pathname === link.href
                     ? 'text-brand-primary'
-                    : 'text-brand-dark hover:text-brand-primary'
+                    : 'text-brand-dark drop-shadow-sm hover:text-brand-primary'
                 }`}
               >
                 {link.name}
@@ -88,7 +88,7 @@ export default function Navbar() {
             ))}
             <Link
               href="/reservas"
-              className="ml-3 px-6 py-2.5 bg-brand-primary text-white rounded-full text-sm font-semibold shadow-lg shadow-brand-primary/30 hover:bg-brand-secondary transition-all hover:shadow-xl hover:scale-105"
+              className="ml-3 px-6 py-2.5 bg-brand-primary text-white rounded-full text-sm font-semibold ring-1 ring-white/50 shadow-lg shadow-brand-primary/40 hover:bg-brand-secondary transition-all hover:shadow-xl hover:scale-105"
             >
               Reserva Ahora
             </Link>

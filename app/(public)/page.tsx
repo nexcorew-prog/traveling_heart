@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
 import {
   FaUsers,
   FaThumbsUp,
@@ -22,9 +25,9 @@ import {
 import { supabase, type Tour, type Testimonial, type BlogPost } from '@/lib/supabase';
 
 const heroSlides = [
-  'https://images.pexels.com/photos/30612994/pexels-photo-30612994.jpeg?auto=compress&cs=tinysrgb&w=1920',
-  'https://images.pexels.com/photos/36303148/pexels-photo-36303148.jpeg?auto=compress&cs=tinysrgb&w=1920',
-  'https://images.pexels.com/photos/35987049/pexels-photo-35987049.jpeg?auto=compress&cs=tinysrgb&w=1920',
+  'https://images.pexels.com/photos/30929501/pexels-photo-30929501.jpeg?auto=compress&cs=tinysrgb&w=1920',
+  'https://images.pexels.com/photos/36303146/pexels-photo-36303146.jpeg?auto=compress&cs=tinysrgb&w=1920',
+  'https://images.pexels.com/photos/7406503/pexels-photo-7406503.jpeg?auto=compress&cs=tinysrgb&w=1920',
 ];
 
 const whyUs = [
@@ -85,24 +88,27 @@ export default function HomePage() {
           modules={[Autoplay, Pagination, EffectFade]}
           autoplay={{ delay: 5000, disableOnInteraction: false }}
           pagination={{ clickable: true }}
+          effect="fade"
+          fadeEffect={{ crossFade: true }}
+          speed={1400}
           loop
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 z-0 w-full h-full"
         >
           {heroSlides.map((img, i) => (
             <SwiperSlide key={i}>
               <div
-                className="w-full h-full bg-cover bg-center"
+                className="hero-slide w-full h-full bg-cover bg-center"
                 style={{ backgroundImage: `url(${img})` }}
               />
             </SwiperSlide>
           ))}
         </Swiper>
-        <div className="absolute inset-0 bg-hero-overlay" />
+        <div className="hero-overlay-enhanced absolute inset-0 z-10 pointer-events-none" />
 
-        <div className="relative z-10 flex items-center justify-center h-full px-4">
+        <div className="relative z-20 flex items-center justify-center h-full px-4">
           <div className="text-center max-w-4xl">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
@@ -179,8 +185,13 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.15 }}
                 >
-                  <Link href={`/tours/${tour.id}`} className="group block">
+                  <div className="group block">
                     <div className="relative h-96 rounded-2xl overflow-hidden shadow-lg">
+                      <Link
+                        href={`/tours/${tour.id}`}
+                        aria-label={`Ver tour ${tour.name}`}
+                        className="absolute inset-0 z-10"
+                      />
                       <div
                         className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                         style={{ backgroundImage: `url(${tour.images[0]})` }}
@@ -191,7 +202,7 @@ export default function HomePage() {
                           {tour.category}
                         </span>
                       </div>
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                      <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none p-6 text-white">
                         <div className="flex items-center gap-2 text-sm text-white/80 mb-2">
                           <FaMapMarkerAlt />
                           <span>{tour.destination}</span>
@@ -202,12 +213,29 @@ export default function HomePage() {
                         <p className="text-white/80 text-sm mb-4 line-clamp-2">
                           {tour.description}
                         </p>
-                        <span className="inline-flex items-center gap-2 text-brand-accent font-semibold text-sm group-hover:gap-3 transition-all">
-                          Ver Tours <FaArrowRight />
-                        </span>
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="inline-flex items-center gap-2 text-brand-accent font-semibold text-sm group-hover:gap-3 transition-all">
+                            Ver Tours <FaArrowRight />
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              window.open(
+                                'https://wa.me/59175842109?text=Hola%20Traveling%20Heart,%20quiero%20consultar%20la%20disponibilidad%20de%20un%20tour',
+                                '_blank',
+                                'noopener,noreferrer'
+                              );
+                            }}
+                            className="pointer-events-auto inline-flex shrink-0 items-center rounded-full bg-brand-accent px-3 py-2 text-xs font-bold text-brand-dark transition-transform hover:scale-105"
+                          >
+                            Consultar disponibilidad
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -216,8 +244,11 @@ export default function HomePage() {
       </section>
 
       {/* WHY US */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-orange-50/50 to-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="why-us-scene relative isolate overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-orange-50/70 to-white">
+        <div className="why-us-image why-us-image-one" />
+        <div className="why-us-image why-us-image-two" />
+        <div className="why-us-wash" />
+        <div className="relative z-10 max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -240,7 +271,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow text-center"
+                className="rounded-2xl border border-white/70 bg-white/55 p-8 shadow-[0_16px_42px_rgba(75,47,24,0.18)] backdrop-blur-md hover:shadow-xl transition-shadow text-center"
               >
                 <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-brand-primary/10 flex items-center justify-center">
                   <item.icon className="text-brand-primary text-2xl" />
@@ -258,8 +289,10 @@ export default function HomePage() {
       </section>
 
       {/* STATS */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-brand-primary">
-        <div className="max-w-7xl mx-auto">
+      <section className="stats-scene relative isolate overflow-hidden py-20 px-4 sm:px-6 lg:px-8 bg-brand-primary">
+        <div className="stats-scene-image" />
+        <div className="stats-scene-light" />
+        <div className="relative z-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
               <motion.div
@@ -282,8 +315,11 @@ export default function HomePage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="testimonials-scene relative isolate overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="testimonials-orb testimonials-orb-one" />
+        <div className="testimonials-orb testimonials-orb-two" />
+        <div className="testimonials-orb testimonials-orb-three" />
+        <div className="relative z-10 max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -299,21 +335,9 @@ export default function HomePage() {
           </motion.div>
 
           {testimonials.length > 0 && (
-            <Swiper
-              modules={[Autoplay, Pagination]}
-              autoplay={{ delay: 5000, disableOnInteraction: false }}
-              pagination={{ clickable: true }}
-              spaceBetween={30}
-              slidesPerView={1}
-              breakpoints={{
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
-              }}
-              className="pb-12"
-            >
+            <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
               {testimonials.map((t) => (
-                <SwiperSlide key={t.id}>
-                  <div className="bg-gradient-to-br from-orange-50/60 to-white rounded-2xl p-8 shadow-md h-full flex flex-col">
+                  <div key={t.id} className="rounded-3xl border border-white/70 bg-white/65 p-8 shadow-[0_18px_50px_rgba(89,56,29,0.10)] backdrop-blur-xl h-full flex flex-col transition-transform duration-300 hover:-translate-y-1">
                     <FaQuoteLeft className="text-brand-accent text-3xl mb-4" />
                     <p className="text-brand-dark/70 leading-relaxed flex-1 mb-6">
                       "{t.comment}"
@@ -344,9 +368,8 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-                </SwiperSlide>
               ))}
-            </Swiper>
+            </div>
           )}
         </div>
       </section>
