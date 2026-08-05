@@ -23,7 +23,9 @@ export default function BlogPage() {
 
   return (
     <div className="pt-20">
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-brand-primary to-brand-secondary text-white text-center">
+      <section className="relative bg-black text-white text-center">
+        <div className="absolute bg-[url(/salaruyuni.jpg)] z-0 w-full h-full opacity-50 bg-cover bg-center bg-no-repeat" />
+        <div className="relative z-10  py-16 px-4 sm:px-6 lg:px-8">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -35,6 +37,7 @@ export default function BlogPage() {
           Consejos, historias y guías para que aproveches al máximo tu viaje por
           Bolivia.
         </p>
+        </div>
       </section>
 
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">

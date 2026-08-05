@@ -65,17 +65,20 @@ export default function ContactoPage() {
 
   return (
     <div className="pt-20">
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-brand-primary to-brand-secondary text-white text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="font-display font-bold text-5xl sm:text-6xl mb-3"
-        >
-          CONTÁCTANOS
-        </motion.h1>
-        <p className="text-xl text-white/80">
-          Estamos aquí para ayudarte a planificar tu próxima aventura.
-        </p>
+      <section className="relative bg-black text-white text-center">
+        <div className="absolute bg-[url(/salaruyuni.jpg)] z-0 w-full h-full opacity-50 bg-cover bg-center bg-no-repeat" />
+        <div className="relative z-10 py-16 px-4 sm:px-6 lg:px-8">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-display font-bold text-5xl sm:text-6xl mb-3"
+          >
+            CONTÁCTANOS
+          </motion.h1>
+          <p className="text-xl text-white/80">
+            Estamos aquí para ayudarte a planificar tu próxima aventura.
+          </p>
+        </div>
       </section>
 
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">

@@ -46,10 +46,12 @@ export default function DestinosPage() {
   return (
     <div className="pt-20">
       {/* Header */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-brand-primary to-brand-secondary text-white text-center">
+      <section className="relative bg-gradient-to-br bg-black text-white text-center">
+        <div className="absolute bg-[url(/salaruyuni.jpg)] z-0 w-full h-full opacity-50 bg-cover bg-center bg-no-repeat" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 py-20 px-4 sm:px-6 lg:px-8"
         >
           <h1 className="font-display font-bold text-5xl sm:text-6xl mb-4">
             NUESTROS DESTINOS

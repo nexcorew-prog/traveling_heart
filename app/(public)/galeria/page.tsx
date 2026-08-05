@@ -33,15 +33,16 @@ export default function GaleriaPage() {
 
   return (
     <div className="pt-20">
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-brand-primary to-brand-secondary text-white text-center">
+      <section className="relative bg-black text-white text-center">
+        <div className="absolute bg-[url(/salaruyuni.jpg)] z-0 w-full h-full opacity-50 bg-cover bg-center bg-no-repeat" />
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="font-display font-bold text-5xl sm:text-6xl mb-3"
+          className="font-display font-bold text-5xl sm:text-6xl mb-3 pt-16 px-4 sm:px-6 lg:px-8 z-10 relative"
         >
           GALERÍA DE FOTOS
         </motion.h1>
-        <p className="text-xl text-white/80">
+        <p className="text-xl text-white/80 pb-16 relative z-10 px-4 sm:px-6 lg:px-8">
           Mira la belleza de Bolivia a través de nuestros viajeros.
         </p>
       </section>

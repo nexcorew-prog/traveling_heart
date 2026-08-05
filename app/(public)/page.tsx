@@ -84,28 +84,30 @@ export default function HomePage() {
     <>
       {/* HERO */}
       <section className="relative h-screen min-h-[600px] overflow-hidden">
-        <Swiper
-          modules={[Autoplay, Pagination, EffectFade]}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          pagination={{ clickable: true }}
-          effect="fade"
-          fadeEffect={{ crossFade: true }}
-          speed={1400}
-          loop
-          className="absolute inset-0 z-0 w-full h-full"
-        >
-          {heroSlides.map((img, i) => (
-            <SwiperSlide key={i}>
-              <div
-                className="hero-slide w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${img})` }}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="absolute inset-0 z-10">
+          <Swiper
+            modules={[Autoplay, Pagination, EffectFade]}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            pagination={{ clickable: true }}
+            effect="fade"
+            fadeEffect={{ crossFade: true }}
+            speed={1400}
+            loop
+            className="relative inset-0 z-0 w-full h-full"
+          >
+            {heroSlides.map((img, i) => (
+              <SwiperSlide key={i}>
+                <div
+                  className="hero-slide w-full h-full bg-cover bg-center"
+                  style={{ backgroundImage: `url(${img})` }}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
         <div className="hero-overlay-enhanced absolute inset-0 z-10 pointer-events-none" />
 
-        <div className="relative z-20 flex items-center justify-center h-full px-4">
+        <div className="relative z-30 flex items-center justify-center h-full px-4">
           <div className="text-center max-w-4xl">
             <motion.div
               initial={false}
@@ -244,11 +246,9 @@ export default function HomePage() {
       </section>
 
       {/* WHY US */}
-      <section className="why-us-scene relative isolate overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-orange-50/70 to-white">
-        <div className="why-us-image why-us-image-one" />
-        <div className="why-us-image why-us-image-two" />
-        <div className="why-us-wash" />
-        <div className="relative z-10 max-w-7xl mx-auto">
+      <section className="why-us-scene relative isolate overflow-hidden bg-gradient-to-b from-orange-50/70 to-white">
+        <div className="absolute bg-[url(https://images.pexels.com/photos/36303146/pexels-photo-36303146.jpeg?auto=compress&cs=tinysrgb&w=1920)] z-0 w-full h-full" />
+        <div className="relative z-10 max-w-7xl mx-auto p-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -273,8 +273,8 @@ export default function HomePage() {
                 transition={{ delay: i * 0.1 }}
                 className="rounded-2xl border border-white/70 bg-white/55 p-8 shadow-[0_16px_42px_rgba(75,47,24,0.18)] backdrop-blur-md hover:shadow-xl transition-shadow text-center"
               >
-                <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-brand-primary/10 flex items-center justify-center">
-                  <item.icon className="text-brand-primary text-2xl" />
+                <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-primary flex items-center justify-center">
+                  <item.icon className="text-white text-2xl" />
                 </div>
                 <h3 className="font-display font-semibold text-lg text-brand-dark mb-3">
                   {item.title}
