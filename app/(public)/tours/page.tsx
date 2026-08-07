@@ -93,7 +93,7 @@ export default function ToursPage() {
                           <div>
                             <span className="text-brand-dark/50 text-sm">Desde</span>
                             <div className="font-display font-bold text-3xl text-brand-primary">
-                              ${tour.price}
+                              {tour.price}Bs.
                             </div>
                           </div>
                           <span className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-white rounded-full text-sm font-semibold group-hover:bg-brand-secondary transition-colors">
