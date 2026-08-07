@@ -9,6 +9,7 @@ import { FaHeart, FaBars, FaTimes } from 'react-icons/fa';
 
 const navLinks = [
   { name: 'Inicio', href: '/' },
+  { name: 'Nosotros', href: '/nosotros' },
   { name: 'Destinos', href: '/destinos' },
   { name: 'Tours', href: '/tours' },
   { name: 'Galería', href: '/galeria' },

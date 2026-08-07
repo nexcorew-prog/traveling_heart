@@ -208,7 +208,14 @@ export default function ContactoPage() {
                   <div>
                     <p className="font-semibold text-brand-dark text-sm">Dirección</p>
                     <p className="text-brand-dark/60 text-sm">
-                      Calle Sagarnaga 123, La Paz, Bolivia
+                      <a
+                        href="https://maps.app.goo.gl/KZL1P53xejEKfG5V6"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-brand-primary"
+                      >
+                        Traveling Heart Tour Operadora — Ver ubicación
+                      </a>
                     </p>
                   </div>
                 </li>
@@ -217,8 +224,8 @@ export default function ContactoPage() {
                     <FaPhone className="text-brand-primary" />
                   </div>
                   <div>
-                    <p className="font-semibold text-brand-dark text-sm">Teléfono</p>
-                    <p className="text-brand-dark/60 text-sm">+591 758 421 09</p>
+                    <p className="font-semibold text-brand-dark text-sm">Teléfono Principal</p>
+                    <p className="text-brand-dark/60 text-sm">+591 64292424</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
@@ -247,6 +254,19 @@ export default function ContactoPage() {
                       Lun - Sáb: 8:00 - 20:00
                       <br />
                       Dom: 9:00 - 14:00
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center shrink-0">
+                    <FaPhone className="text-brand-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-brand-dark text-sm">Equipo</p>
+                    <p className="text-brand-dark/60 text-sm">
+                      Jacquelin Salgado: +591 69959855
+                      <br />
+                      Jasiel Salgado: +591 7755892
                     </p>
                   </div>
                 </li>
