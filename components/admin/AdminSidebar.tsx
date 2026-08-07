@@ -21,8 +21,6 @@ import { supabase } from '@/lib/supabase';
 const menuItems = [
   { name: 'Resumen', href: '/admin/dashboard', icon: FaHome },
   { name: 'Tours', href: '/admin/dashboard/tours', icon: FaMapMarkedAlt },
-  { name: 'Reservas', href: '/admin/dashboard/reservas', icon: FaCalendarCheck },
-  { name: 'Clientes', href: '/admin/dashboard/clientes', icon: FaUsers },
   { name: 'Blog', href: '/admin/dashboard/blog', icon: FaNewspaper },
   { name: 'Galería', href: '/admin/dashboard/galeria', icon: FaImages },
 ];

@@ -77,24 +77,6 @@ export default function AdminDashboardPage() {
       icon: FaMapMarkedAlt,
       color: 'from-brand-primary to-brand-secondary',
     },
-    {
-      label: 'Reservas del Mes',
-      value: stats?.reservationsThisMonth ?? 0,
-      icon: FaCalendarCheck,
-      color: 'from-brand-secondary to-brand-accent',
-    },
-    {
-      label: 'Ingresos',
-      value: `Bs. ${(stats?.revenue ?? 0).toFixed(0)}`,
-      icon: FaDollarSign,
-      color: 'from-brand-accent to-brand-primary',
-    },
-    {
-      label: 'Clientes Registrados',
-      value: stats?.totalClients ?? 0,
-      icon: FaUsers,
-      color: 'from-brand-primary to-brand-secondary',
-    },
   ];
 
   const statusColors: Record<string, string> = {
@@ -148,7 +130,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Recent reservations */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
           <h2 className="font-display font-bold text-xl text-brand-dark">
             Reservas recientes
@@ -209,7 +191,7 @@ export default function AdminDashboardPage() {
             </table>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
