@@ -33,7 +33,7 @@ export default function ReservasPage() {
   const [message, setMessage] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('tarjeta');
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState<{ code: string } | null>(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -51,7 +51,7 @@ export default function ReservasPage() {
 
   const total = selectedTour ? selectedTour.price * numPeople : 0;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTour || !travelDate || !fullName || !email || !phone) {
       toast({
@@ -61,38 +61,21 @@ export default function ReservasPage() {
       });
       return;
     }
+
     setSubmitting(true);
-    const { data, error } = await supabase
-      .from('reservations')
-      .insert({
-        tour_id: selectedTour.id,
-        tour_name: selectedTour.name,
-        travel_date: travelDate,
-        num_people: numPeople,
-        full_name: fullName,
-        email,
-        phone,
-        message,
-        total,
-        payment_method: paymentMethod,
-        status: 'pendiente',
-      })
-      .select()
-      .single();
+
+    const text = encodeURIComponent(
+      `Hola Traveling Heart, quiero reservar:\n- Tour: ${selectedTour.name}\n- Destino: ${selectedTour.destination}\n- Fecha: ${travelDate}\n- Personas: ${numPeople}\n- Nombre: ${fullName}\n- Email: ${email}\n- Teléfono: ${phone}\n- Mensaje: ${message}\n- Total: Bs. ${total}`,
+    );
+
+    const waUrl = `https://wa.me/64292424?text=${text}`;
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
 
     setSubmitting(false);
-    if (error || !data) {
-      toast({
-        title: 'Error',
-        description: 'No se pudo procesar la reserva. Intenta de nuevo.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    setSuccess({ code: data.reservation_code });
+    setSuccess(true);
     toast({
-      title: 'Reserva confirmada',
-      description: `Tu código de reserva es ${data.reservation_code}`,
+      title: 'Reserva enviada a WhatsApp',
+      description: 'Se abrió WhatsApp con los datos de tu reserva.',
     });
   };
 
@@ -113,23 +96,14 @@ export default function ReservasPage() {
             <FaCheckCircle className="text-green-500 text-5xl" />
           </motion.div>
           <h1 className="font-display font-bold text-3xl text-brand-primary mb-3">
-            ¡Reserva Confirmada!
+            ¡Reserva lista para enviar!
           </h1>
           <p className="text-brand-dark/60 mb-6">
-            Hemos recibido tu solicitud de reserva. Te contactaremos en breve
-            para coordinar los detalles.
+            Se abrió WhatsApp con los datos de tu reserva. Completa el envío en el chat para confirmar.
           </p>
-          <div className="bg-orange-50 rounded-2xl p-6 mb-6">
-            <div className="flex items-center justify-center gap-2 text-brand-dark/50 text-sm mb-1">
-              <FaReceipt /> Número de reserva
-            </div>
-            <div className="font-display font-bold text-3xl text-brand-primary tracking-wider">
-              {success.code}
-            </div>
-          </div>
           <button
             onClick={() => {
-              setSuccess(null);
+              setSuccess(false);
               setSelectedTour(null);
               setNumPeople(1);
               setTravelDate('');
@@ -292,83 +266,6 @@ export default function ReservasPage() {
                 </div>
               </div>
             </div>
-
-            {/* Payment method */}
-            <div>
-              <label className="block text-sm font-semibold text-brand-dark mb-2">
-                Método de pago
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('tarjeta')}
-                  className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
-                    paymentMethod === 'tarjeta'
-                      ? 'border-brand-primary bg-brand-primary/5'
-                      : 'border-gray-200'
-                  }`}
-                >
-                  <FaCreditCard className="text-brand-primary text-xl" />
-                  <span className="text-sm font-semibold text-brand-dark">
-                    Tarjeta
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('transferencia')}
-                  className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
-                    paymentMethod === 'transferencia'
-                      ? 'border-brand-primary bg-brand-primary/5'
-                      : 'border-gray-200'
-                  }`}
-                >
-                  <FaUniversity className="text-brand-primary text-xl" />
-                  <span className="text-sm font-semibold text-brand-dark">
-                    Transferencia
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {paymentMethod === 'tarjeta' && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="grid sm:grid-cols-2 gap-4 p-4 bg-orange-50/50 rounded-xl"
-              >
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-semibold text-brand-dark/60 mb-1">
-                    Número de tarjeta (simulación)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="4242 4242 4242 4242"
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-brand-dark/60 mb-1">
-                    Vencimiento
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="MM/AA"
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-brand-dark/60 mb-1">
-                    CVV
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="123"
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                  />
-                </div>
-              </motion.div>
-            )}
-
             <button
               type="submit"
               disabled={submitting}
@@ -405,7 +302,7 @@ export default function ReservasPage() {
                   <div className="space-y-2 text-sm border-t border-gray-100 pt-4">
                     <div className="flex justify-between text-brand-dark/60">
                       <span>Precio por persona</span>
-                      <span>${selectedTour.price}</span>
+                      <span>Bs. {selectedTour.price}</span>
                     </div>
                     <div className="flex justify-between text-brand-dark/60">
                       <span>Personas</span>
@@ -421,7 +318,7 @@ export default function ReservasPage() {
                     )}
                     <div className="flex justify-between font-bold text-brand-primary text-lg pt-3 border-t border-gray-100">
                       <span>Total</span>
-                      <span>${total}</span>
+                      <span>Bs. {total}</span>
                     </div>
                   </div>
                 </>

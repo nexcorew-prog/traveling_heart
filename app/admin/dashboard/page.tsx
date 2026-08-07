@@ -85,7 +85,7 @@ export default function AdminDashboardPage() {
     },
     {
       label: 'Ingresos',
-      value: `$${(stats?.revenue ?? 0).toFixed(0)}`,
+      value: `Bs. ${(stats?.revenue ?? 0).toFixed(0)}`,
       icon: FaDollarSign,
       color: 'from-brand-accent to-brand-primary',
     },

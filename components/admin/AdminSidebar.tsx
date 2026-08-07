@@ -11,6 +11,7 @@ import {
   FaCalendarCheck,
   FaUsers,
   FaNewspaper,
+  FaImages,
   FaSignOutAlt,
   FaBars,
   FaTimes,
@@ -23,6 +24,7 @@ const menuItems = [
   { name: 'Reservas', href: '/admin/dashboard/reservas', icon: FaCalendarCheck },
   { name: 'Clientes', href: '/admin/dashboard/clientes', icon: FaUsers },
   { name: 'Blog', href: '/admin/dashboard/blog', icon: FaNewspaper },
+  { name: 'Galería', href: '/admin/dashboard/galeria', icon: FaImages },
 ];
 
 export default function AdminSidebar() {

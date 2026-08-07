@@ -33,16 +33,21 @@ export default function Footer() {
             </p>
             <div className="flex gap-3 mt-6">
               {[FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube].map(
-                (Icon, i) => (
-                  <motion.a
-                    key={i}
-                    href="#"
-                    whileHover={{ scale: 1.15, y: -2 }}
-                    className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center hover:bg-brand-accent hover:text-brand-dark transition-colors"
-                  >
-                    <Icon size={16} />
-                  </motion.a>
-                ),
+                (Icon, i) => {
+                  const href = Icon === FaWhatsapp ? 'https://wa.me/64292424' : '#';
+                  return (
+                    <motion.a
+                      key={i}
+                      href={href}
+                      target={Icon === FaWhatsapp ? '_blank' : undefined}
+                      rel={Icon === FaWhatsapp ? 'noopener noreferrer' : undefined}
+                      whileHover={{ scale: 1.15, y: -2 }}
+                      className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center hover:bg-brand-accent hover:text-brand-dark transition-colors"
+                    >
+                      <Icon size={16} />
+                    </motion.a>
+                  );
+                },
               )}
             </div>
           </div>

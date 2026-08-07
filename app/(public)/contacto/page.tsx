@@ -228,7 +228,7 @@ export default function ContactoPage() {
                   <div>
                     <p className="font-semibold text-brand-dark text-sm">WhatsApp</p>
                     <a
-                      href="https://wa.me/59175842109"
+                      href="https://wa.me/64292424"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-brand-dark/60 text-sm hover:text-brand-primary"

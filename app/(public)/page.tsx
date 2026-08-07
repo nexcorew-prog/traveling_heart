@@ -224,8 +224,11 @@ export default function HomePage() {
                             onClick={(event) => {
                               event.preventDefault();
                               event.stopPropagation();
+                              const text = encodeURIComponent(
+                                `Hola Traveling Heart, quiero consultar la disponibilidad del tour ${tour.name} en ${tour.destination}`,
+                              );
                               window.open(
-                                'https://wa.me/59175842109?text=Hola%20Traveling%20Heart,%20quiero%20consultar%20la%20disponibilidad%20de%20un%20tour',
+                                `https://wa.me/64292424?text=${text}`,
                                 '_blank',
                                 'noopener,noreferrer'
                               );

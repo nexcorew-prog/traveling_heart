@@ -51,7 +51,7 @@
 
 /* Swiper custom styles */
 .swiper-pagination-bullet {
-  background: #fb5b05 !important;
+  background: #000000 !important;
   opacity: 0.4 !important;
 }
 .swiper-pagination-bullet-active {
