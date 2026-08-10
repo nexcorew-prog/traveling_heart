@@ -28,7 +28,7 @@ const emptyForm = {
   featured: false,
 };
 
-const categories = ['Aventura', 'Cultura', 'Naturaleza', 'Gastronomía'];
+const categories = ['Montaña','Full day', 'Treking','Aventura', 'Cultura', 'Naturaleza', 'Gastronomía'];
 
 export default function AdminToursPage() {
   const { toast } = useToast();
