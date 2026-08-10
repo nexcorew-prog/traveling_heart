@@ -10,7 +10,7 @@ import {
 import { supabase, type GalleryImage } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
-const categories = [
+const defaultCategories = [
   'Paisaje',
   'Ciudad',
   'Cultura',
@@ -30,6 +30,10 @@ export default function AdminGalleryPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState('');
   const [previewUrl, setPreviewUrl] = useState('');
+
+  const categoryOptions = Array.from(
+    new Set([...defaultCategories, ...galleryItems.map((item) => item.category).filter(Boolean)]),
+  );
 
   const loadGallery = async () => {
     const { data } = await supabase
@@ -200,17 +204,20 @@ export default function AdminGalleryPage() {
             <label className="block text-sm font-semibold text-brand-dark mb-2">
               Categoría *
             </label>
-            <select
+            <input
+              type="text"
+              list="gallery-categories"
               value={category}
               onChange={(event) => setCategory(event.target.value)}
               className="w-full px-4 py-3 rounded-2xl border border-gray-200 outline-none focus:border-brand-primary transition-colors"
-            >
-              {categories.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
+              placeholder="Escribe una categoría o elige una"
+              required
+            />
+            <datalist id="gallery-categories">
+              {categoryOptions.map((option) => (
+                <option key={option} value={option} />
               ))}
-            </select>
+            </datalist>
           </div>
 
           <div className="space-y-4">

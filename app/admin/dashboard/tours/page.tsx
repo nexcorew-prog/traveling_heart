@@ -28,7 +28,7 @@ const emptyForm = {
   featured: false,
 };
 
-const categories = ['Montaña','Full day', 'Treking','Aventura', 'Cultura', 'Naturaleza', 'Gastronomía'];
+const defaultCategories = ['Montaña', 'Full day', 'Treking', 'Aventura', 'Cultura', 'Naturaleza', 'Gastronomía'];
 
 export default function AdminToursPage() {
   const { toast } = useToast();
@@ -38,6 +38,10 @@ export default function AdminToursPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+
+  const categoryOptions = Array.from(
+    new Set([...defaultCategories, ...tours.map((tour) => tour.category).filter(Boolean)]),
+  );
 
   const loadTours = async () => {
     const { data } = await supabase
@@ -327,15 +331,20 @@ export default function AdminToursPage() {
                     <label className="block text-sm font-semibold text-brand-dark mb-1.5">
                       Categoría
                     </label>
-                    <select
+                    <input
+                      type="text"
+                      list="tour-categories"
                       value={form.category}
                       onChange={(e) => setForm({ ...form, category: e.target.value })}
+                      placeholder="Escribe una categoría o elige una"
                       className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                    >
-                      {categories.map((c) => (
-                        <option key={c}>{c}</option>
+                      required
+                    />
+                    <datalist id="tour-categories">
+                      {categoryOptions.map((c) => (
+                        <option key={c} value={c} />
                       ))}
-                    </select>
+                    </datalist>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-brand-dark mb-1.5">
