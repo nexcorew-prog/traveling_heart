@@ -216,17 +216,6 @@ export default function AdminGalleryPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-semibold text-brand-dark mb-2">
-                Seleccionar archivo
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full text-sm text-brand-dark"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-brand-dark mb-2">
                 O usar una URL de imagen
               </label>
               <input

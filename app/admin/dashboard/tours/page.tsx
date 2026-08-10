@@ -222,7 +222,7 @@ export default function AdminToursPage() {
                       {tour.destination}
                     </td>
                     <td className="px-6 py-4 text-sm font-semibold text-brand-primary">
-                      ${tour.price}
+                      {tour.price}Bs.
                     </td>
                     <td className="px-6 py-4 text-sm text-brand-dark/60">
                       {tour.duration}
@@ -351,7 +351,7 @@ export default function AdminToursPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-brand-dark mb-1.5">
-                      Precio (USD)
+                      Precio (BS)
                     </label>
                     <input
                       type="number"

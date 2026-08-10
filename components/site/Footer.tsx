@@ -7,6 +7,7 @@ import {
   FaFacebookF,
   FaInstagram,
   FaWhatsapp,
+  FaTiktok,
 
   FaMapMarkerAlt,
   FaPhoneAlt,
@@ -35,6 +36,7 @@ export default function Footer() {
               {[
                 { Icon: FaFacebookF, url: 'https://www.facebook.com/share/17CMH1mynD/' },
                 { Icon: FaInstagram, url: 'https://www.instagram.com/traveling_heart1?igsh=NXY3Y2drOWQwOWUw' },
+                { Icon: FaTiktok, url: 'https://www.tiktok.com/@traveling_heart1/' },
                 { Icon: FaWhatsapp, url: 'https://wa.me/64292424' },
               ].map(
                 ({ Icon, url }, i) => (
@@ -88,7 +90,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-white/80">
               <li className="flex items-start gap-3">
                 <FaMapMarkerAlt className="mt-1 text-brand-accent shrink-0" />
-                <span>Calle Sagarnaga 123, La Paz, Bolivia</span>
+                <span>las brujas, C/ Jose, Linares y, La Paz</span>
               </li>
               <li className="flex items-center gap-3">
                 <FaPhoneAlt className="text-brand-accent shrink-0" />
@@ -96,14 +98,14 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <FaEnvelope className="text-brand-accent shrink-0" />
-                <span>info@travelingheart.bo</span>
+                <span>travelingh69@gmail.com</span>
               </li>
               <li className="flex items-start gap-3">
                 <FaClock className="mt-1 text-brand-accent shrink-0" />
                 <span>
-                  Lun - Sáb: 8:00 - 20:00
+                  Lun - Sáb: 9:00 - 19:30
                   <br />
-                  Dom: 9:00 - 14:00
+                  Dom: 9:00 - 18:00
                 </span>
               </li>
             </ul>

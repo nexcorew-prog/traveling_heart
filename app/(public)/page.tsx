@@ -125,8 +125,7 @@ export default function HomePage() {
                 <span className="text-brand-accent">corazón</span>
               </h1>
               <p className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Experiencias auténticas en La Paz, Tiwanaku, Yungas, Salar de
-                Uyuni y Lago Titicaca.
+                Experiencias auténticas en Bolivia.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
