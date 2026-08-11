@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   FaTrash,
   FaImages,
@@ -21,6 +22,7 @@ const defaultCategories = [
 ];
 
 export default function AdminGalleryPage() {
+  const router = useRouter();
   const { toast } = useToast();
   const [galleryItems, setGalleryItems] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,6 +80,22 @@ export default function AdminGalleryPage() {
     }
 
     setSaving(true);
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      toast({
+        title: 'Sesión requerida',
+        description: 'Vuelve a iniciar sesión en el panel administrativo para guardar imágenes.',
+        variant: 'destructive',
+      });
+      setSaving(false);
+      router.push('/admin/login');
+      return;
+    }
+
     let finalImageUrl = imageUrl.trim();
 
     if (imageFile) {
@@ -104,16 +122,24 @@ export default function AdminGalleryPage() {
       }
     }
 
-    const { error } = await supabase.from('gallery_images').insert({
-      title: title.trim(),
-      category,
-      image_url: finalImageUrl,
+    const response = await fetch('/api/admin/gallery', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: title.trim(),
+        category,
+        image_url: finalImageUrl,
+      }),
     });
 
-    if (error) {
+    const result = await response.json();
+
+    if (!response.ok || result.error) {
       toast({
         title: 'Error',
-        description: error.message,
+        description: result.error || 'No se pudo guardar la imagen.',
         variant: 'destructive',
       });
     } else {
@@ -209,6 +235,21 @@ export default function AdminGalleryPage() {
           </div>
 
           <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-brand-dark mb-2">
+                Subir imagen desde tu dispositivo *
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-brand-primary transition-colors"
+              />
+              <p className="mt-2 text-xs text-brand-dark/50">
+                Se comprime y sube automáticamente a Supabase Storage.
+              </p>
+            </div>
+
             <div>
               <label className="block text-sm font-semibold text-brand-dark mb-2">
                 O usar una URL de imagen

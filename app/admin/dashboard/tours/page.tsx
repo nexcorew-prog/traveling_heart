@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   FaPlus,
@@ -31,6 +32,7 @@ const emptyForm = {
 const defaultCategories = ['Montaña', 'Full day', 'Treking', 'Aventura', 'Cultura', 'Naturaleza', 'Gastronomía'];
 
 export default function AdminToursPage() {
+  const router = useRouter();
   const { toast } = useToast();
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,6 +89,21 @@ export default function AdminToursPage() {
     e.preventDefault();
     setSaving(true);
 
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      toast({
+        title: 'Sesión requerida',
+        description: 'Vuelve a iniciar sesión en el panel administrativo para guardar tours.',
+        variant: 'destructive',
+      });
+      setSaving(false);
+      router.push('/admin/login');
+      return;
+    }
+
     // Prepare images: if any file was selected for an image index, compress and upload it,
     // otherwise keep the text URL provided in the form.
     const images = [...form.images];
@@ -133,14 +150,28 @@ export default function AdminToursPage() {
         .update(payload)
         .eq('id', editingId);
       if (error) {
-        toast({ title: 'Error', description: error.message, variant: 'destructive' });
+        const isRls = error.message?.toLowerCase().includes('row-level security') || error.message?.toLowerCase().includes('violates');
+        toast({
+          title: 'Error al guardar',
+          description: isRls
+            ? 'La sesión de administrador no pudo actualizar el tour. Vuelve a iniciar sesión e inténtalo de nuevo.'
+            : error.message,
+          variant: 'destructive',
+        });
       } else {
         toast({ title: 'Tour actualizado', description: form.name });
       }
     } else {
       const { error } = await supabase.from('tours').insert(payload);
       if (error) {
-        toast({ title: 'Error', description: error.message, variant: 'destructive' });
+        const isRls = error.message?.toLowerCase().includes('row-level security') || error.message?.toLowerCase().includes('violates');
+        toast({
+          title: 'Error al guardar',
+          description: isRls
+            ? 'La sesión de administrador no pudo crear el tour. Vuelve a iniciar sesión e inténtalo de nuevo.'
+            : error.message,
+          variant: 'destructive',
+        });
       } else {
         toast({ title: 'Tour creado', description: form.name });
       }

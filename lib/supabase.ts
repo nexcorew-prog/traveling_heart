@@ -1,7 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  '';
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Faltan las variables de entorno de Supabase.');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -126,21 +133,38 @@ export async function compressImage(
 export async function uploadImageToStorage(
   file: File | Blob,
   options?: { bucket?: string; folder?: string; fileName?: string },
-): Promise<{ publicUrl: string; path: string }>
-{
-  const bucket = options?.bucket ?? 'public';
+): Promise<{ publicUrl: string; path: string }> {
+  const requestedBucket = options?.bucket ?? 'public';
   const folder = options?.folder ?? 'images';
   const name =
     options?.fileName || `${Date.now()}_${(file as File).name?.replace(/\s+/g, '_') ?? 'img'}`;
   const path = `${folder}/${name}`;
 
-  // Supabase storage upload accepts File or Blob
-  const { data, error } = await supabase.storage.from(bucket).upload(path, file as File | Blob, {
-    cacheControl: '3600',
-    upsert: false,
-  });
-  if (error) throw error;
+  const candidates = Array.from(new Set([requestedBucket, 'public', 'images']))
+    .filter(Boolean);
 
-  const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
-  return { publicUrl: urlData.publicUrl, path };
+  let lastError: Error | null = null;
+
+  for (const bucket of candidates) {
+    const { data, error } = await supabase.storage.from(bucket).upload(path, file as File | Blob, {
+      cacheControl: '3600',
+      upsert: false,
+    });
+
+    if (!error) {
+      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
+      return { publicUrl: urlData.publicUrl, path };
+    }
+
+    lastError = error as Error;
+
+    const msg = error?.message?.toLowerCase() || '';
+    const isBucketMissing = msg.includes('bucket') && msg.includes('not found');
+    if (!isBucketMissing) {
+      throw error;
+    }
+  }
+
+  if (lastError) throw lastError;
+  throw new Error('No se pudo subir la imagen al almacenamiento.');
 }
