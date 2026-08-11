@@ -7,7 +7,7 @@ import {
   FaUpload,
   FaCircleNotch,
 } from 'react-icons/fa';
-import { supabase, type GalleryImage } from '@/lib/supabase';
+import { supabase, type GalleryImage, compressImage, uploadImageToStorage } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const defaultCategories = [
@@ -81,39 +81,27 @@ export default function AdminGalleryPage() {
     let finalImageUrl = imageUrl.trim();
 
     if (imageFile) {
-      const fileExt = imageFile.name.split('.').pop();
-      const fileName = `${Date.now()}_${title.replace(/\s+/g, '_')}.${fileExt}`;
-      const bucketName = 'gallery';
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from(bucketName)
-        .upload(fileName, imageFile, { upsert: true });
-
-      if (uploadError || !uploadData) {
+      try {
+        // Compress image before upload
+        const compressed = await compressImage(imageFile, 1600, 0.78);
+        const fileExt = (imageFile.name.split('.').pop() || 'jpg').replace(/\?.*$/, '');
+        const fileName = `${Date.now()}_${title.replace(/\s+/g, '_')}.${fileExt}`;
+        // Upload to Supabase Storage using helper
+        const { publicUrl } = await uploadImageToStorage(compressed, {
+          bucket: 'gallery',
+          folder: 'gallery',
+          fileName,
+        });
+        finalImageUrl = publicUrl;
+      } catch (err: any) {
         toast({
           title: 'Error al subir imagen',
-          description:
-            uploadError?.message || 'No se pudo cargar la imagen al almacenamiento.',
+          description: err?.message || 'No se pudo procesar la imagen.',
           variant: 'destructive',
         });
         setSaving(false);
         return;
       }
-
-      const { data: publicUrlData } = supabase.storage
-        .from(bucketName)
-        .getPublicUrl(uploadData.path);
-
-      if (!publicUrlData?.publicUrl) {
-        toast({
-          title: 'Error al obtener URL',
-          description: 'No se pudo obtener la URL pública de la imagen.',
-          variant: 'destructive',
-        });
-        setSaving(false);
-        return;
-      }
-
-      finalImageUrl = publicUrlData.publicUrl;
     }
 
     const { error } = await supabase.from('gallery_images').insert({

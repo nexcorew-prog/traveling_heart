@@ -10,7 +10,7 @@ import {
   FaSave,
   FaMapMarkedAlt,
 } from 'react-icons/fa';
-import { supabase, type Tour } from '@/lib/supabase';
+import { supabase, type Tour, compressImage, uploadImageToStorage } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const emptyForm = {
@@ -38,6 +38,8 @@ export default function AdminToursPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [imageFilesMap, setImageFilesMap] = useState<Record<number, File | null>>({});
+  const [imagePreviews, setImagePreviews] = useState<Record<number, string>>({});
 
   const categoryOptions = Array.from(
     new Set([...defaultCategories, ...tours.map((tour) => tour.category).filter(Boolean)]),
@@ -85,6 +87,30 @@ export default function AdminToursPage() {
     e.preventDefault();
     setSaving(true);
 
+    // Prepare images: if any file was selected for an image index, compress and upload it,
+    // otherwise keep the text URL provided in the form.
+    const images = [...form.images];
+    for (let i = 0; i < images.length; i++) {
+      const file = imageFilesMap[i];
+      if (file) {
+        try {
+          const compressed = await compressImage(file, 1600, 0.78);
+          const fileExt = (file.name.split('.').pop() || 'jpg').replace(/\?.*$/, '');
+          const fileName = `${Date.now()}_${form.name.replace(/\s+/g, '_')}_${i}.${fileExt}`;
+          const { publicUrl } = await uploadImageToStorage(compressed, {
+            bucket: 'gallery',
+            folder: 'tours',
+            fileName,
+          });
+          images[i] = publicUrl;
+        } catch (err: any) {
+          toast({ title: 'Error al subir imagen', description: err?.message || 'No se pudo subir la imagen.', variant: 'destructive' });
+          setSaving(false);
+          return;
+        }
+      }
+    }
+
     const payload = {
       name: form.name,
       destination: form.destination,
@@ -94,7 +120,7 @@ export default function AdminToursPage() {
       itinerary: form.itinerary.filter((x) => x.trim()),
       includes: form.includes.filter((x) => x.trim()),
       price: Number(form.price),
-      images: form.images.filter((x) => x.trim()),
+      images: images.filter((x) => x.trim()),
       available_dates: form.available_dates.filter((x) => x.trim()),
       status: form.status,
       featured: form.featured,
@@ -156,6 +182,20 @@ export default function AdminToursPage() {
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index),
     }));
+  };
+
+  const handleImageFileChange = (index: number, file: File | null) => {
+    setImageFilesMap((prev) => ({ ...prev, [index]: file }));
+    if (!file) {
+      setImagePreviews((p) => {
+        const np = { ...p };
+        delete np[index];
+        return np;
+      });
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setImagePreviews((p) => ({ ...p, [index]: url }));
   };
 
   return (
@@ -397,13 +437,42 @@ export default function AdminToursPage() {
                     </label>
                     <div className="space-y-2">
                       {form[field].map((item, i) => (
-                        <div key={i} className="flex gap-2">
-                          <input
-                            type="text"
-                            value={item}
-                            onChange={(e) => updateListField(field, i, e.target.value)}
-                            className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                          />
+                        <div key={i} className="flex gap-2 items-center">
+                          {field === 'images' ? (
+                            <>
+                              <input
+                                type="text"
+                                value={item}
+                                onChange={(e) => updateListField(field, i, e.target.value)}
+                                placeholder="URL de imagen o deja vacío si subirás un archivo"
+                                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
+                              />
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleImageFileChange(i, e.target.files?.[0] ?? null)}
+                                className="w-36 text-sm"
+                              />
+                              {(imagePreviews[i] || item) && (
+                                <div className="w-20 h-12 rounded overflow-hidden">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={imagePreviews[i] ?? item}
+                                    alt={`preview-${i}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <input
+                              type="text"
+                              value={item}
+                              onChange={(e) => updateListField(field, i, e.target.value)}
+                              className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
+                            />
+                          )}
+
                           {form[field].length > 1 && (
                             <button
                               type="button"
