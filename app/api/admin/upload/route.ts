@@ -54,11 +54,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data: urlData, error: urlError } = adminSupabase.storage.from(bucket).getPublicUrl(path);
+  const { data: urlData } = adminSupabase.storage.from(bucket).getPublicUrl(path);
 
-  if (urlError) {
+  if (!urlData?.publicUrl) {
     return NextResponse.json(
-      { error: `No se pudo generar la URL pública: ${urlError.message}` },
+      { error: 'No se pudo generar la URL pública.' },
       { status: 500 },
     );
   }
