@@ -302,9 +302,6 @@ export default function TourDetailPage() {
               >
                 Reservar este Tour
               </button>
-              <p className="text-center text-xs text-brand-dark/40 mt-3">
-                Sin pago ahora · Cancelación gratuita
-              </p>
             </motion.div>
           </div>
         </div>

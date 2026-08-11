@@ -134,37 +134,44 @@ export async function uploadImageToStorage(
   file: File | Blob,
   options?: { bucket?: string; folder?: string; fileName?: string },
 ): Promise<{ publicUrl: string; path: string }> {
-  const requestedBucket = options?.bucket ?? 'public';
+  const bucket = options?.bucket ?? 'public';
   const folder = options?.folder ?? 'images';
-  const name =
-    options?.fileName || `${Date.now()}_${(file as File).name?.replace(/\s+/g, '_') ?? 'img'}`;
-  const path = `${folder}/${name}`;
 
-  const candidates = Array.from(new Set([requestedBucket, 'public', 'images']))
-    .filter(Boolean);
+  const sanitizeFileName = (value: string) =>
+    value
+      .replace(/\s+/g, '_')
+      .replace(/[^a-zA-Z0-9._-]/g, '')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '')
+      .slice(0, 200) || 'image';
 
-  let lastError: Error | null = null;
+  const originalName = sanitizeFileName(
+    options?.fileName ?? (file as File).name ?? 'image',
+  );
 
-  for (const bucket of candidates) {
-    const { data, error } = await supabase.storage.from(bucket).upload(path, file as File | Blob, {
-      cacheControl: '3600',
-      upsert: false,
-    });
+  const uniqueSuffix =
+    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2, 12);
 
-    if (!error) {
-      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
-      return { publicUrl: urlData.publicUrl, path };
-    }
+  const fileName = `${Date.now()}_${uniqueSuffix}_${originalName}`;
+  const path = `${folder}/${fileName}`;
 
-    lastError = error as Error;
+  const { data, error } = await supabase.storage.from(bucket).upload(path, file as File | Blob, {
+    cacheControl: '3600',
+    upsert: false,
+  });
 
-    const msg = error?.message?.toLowerCase() || '';
-    const isBucketMissing = msg.includes('bucket') && msg.includes('not found');
-    if (!isBucketMissing) {
-      throw error;
-    }
+  if (error) {
+    throw new Error(
+      `Error subiendo imagen a Supabase Storage en ${bucket}/${path}: ${error.message}`,
+    );
   }
 
-  if (lastError) throw lastError;
-  throw new Error('No se pudo subir la imagen al almacenamiento.');
+  const { data: urlData, error: urlError } = supabase.storage.from(bucket).getPublicUrl(path);
+  if (urlError) {
+    throw new Error(`No se pudo generar la URL pública: ${urlError.message}`);
+  }
+
+  return { publicUrl: urlData.publicUrl, path };
 }

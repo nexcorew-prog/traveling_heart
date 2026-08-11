@@ -11,7 +11,7 @@ import {
   FaSave,
   FaMapMarkedAlt,
 } from 'react-icons/fa';
-import { supabase, type Tour, compressImage, uploadImageToStorage } from '@/lib/supabase';
+import { supabase, type Tour, compressImage } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const emptyForm = {
@@ -114,14 +114,31 @@ export default function AdminToursPage() {
           const compressed = await compressImage(file, 1600, 0.78);
           const fileExt = (file.name.split('.').pop() || 'jpg').replace(/\?.*$/, '');
           const fileName = `${Date.now()}_${form.name.replace(/\s+/g, '_')}_${i}.${fileExt}`;
-          const { publicUrl } = await uploadImageToStorage(compressed, {
-            bucket: 'gallery',
-            folder: 'tours',
-            fileName,
+
+          const formData = new FormData();
+          formData.append('file', compressed);
+          formData.append('bucket', 'gallery');
+          formData.append('folder', 'tours');
+          formData.append('fileName', fileName);
+
+          const uploadResponse = await fetch('/api/admin/upload', {
+            method: 'POST',
+            body: formData,
           });
-          images[i] = publicUrl;
+
+          const uploadResult = await uploadResponse.json();
+          if (!uploadResponse.ok || uploadResult.error) {
+            throw new Error(uploadResult.error || 'Error en la subida de la imagen.');
+          }
+
+          images[i] = uploadResult.publicUrl;
         } catch (err: any) {
-          toast({ title: 'Error al subir imagen', description: err?.message || 'No se pudo subir la imagen.', variant: 'destructive' });
+          console.error('Error subiendo imagen de tour:', err);
+          toast({
+            title: 'Error al subir imagen',
+            description: err?.message || 'No se pudo subir la imagen.',
+            variant: 'destructive',
+          });
           setSaving(false);
           return;
         }
@@ -184,6 +201,27 @@ export default function AdminToursPage() {
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`¿Eliminar el tour "${name}"?`)) return;
+
+    const { data: tour, error: fetchError } = await supabase
+      .from('tours')
+      .select('images')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      toast({ title: 'Error', description: fetchError.message, variant: 'destructive' });
+      return;
+    }
+
+    const imageUrls: string[] = Array.isArray(tour?.images) ? tour.images.filter(Boolean) : [];
+    if (imageUrls.length) {
+      await fetch('/api/admin/storage/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ urls: imageUrls }),
+      });
+    }
+
     const { error } = await supabase.from('tours').delete().eq('id', id);
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });

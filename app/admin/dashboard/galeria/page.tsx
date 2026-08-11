@@ -8,7 +8,7 @@ import {
   FaUpload,
   FaCircleNotch,
 } from 'react-icons/fa';
-import { supabase, type GalleryImage, compressImage, uploadImageToStorage } from '@/lib/supabase';
+import { supabase, type GalleryImage, compressImage } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const defaultCategories = [
@@ -104,14 +104,26 @@ export default function AdminGalleryPage() {
         const compressed = await compressImage(imageFile, 1600, 0.78);
         const fileExt = (imageFile.name.split('.').pop() || 'jpg').replace(/\?.*$/, '');
         const fileName = `${Date.now()}_${title.replace(/\s+/g, '_')}.${fileExt}`;
-        // Upload to Supabase Storage using helper
-        const { publicUrl } = await uploadImageToStorage(compressed, {
-          bucket: 'gallery',
-          folder: 'gallery',
-          fileName,
+
+        const formData = new FormData();
+        formData.append('file', compressed);
+        formData.append('bucket', 'gallery');
+        formData.append('folder', 'gallery');
+        formData.append('fileName', fileName);
+
+        const uploadResponse = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: formData,
         });
-        finalImageUrl = publicUrl;
+
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResponse.ok || uploadResult.error) {
+          throw new Error(uploadResult.error || 'Error en la subida de la imagen.');
+        }
+
+        finalImageUrl = uploadResult.publicUrl;
       } catch (err: any) {
+        console.error('Error subiendo imagen de galería:', err);
         toast({
           title: 'Error al subir imagen',
           description: err?.message || 'No se pudo procesar la imagen.',
@@ -160,6 +172,30 @@ export default function AdminGalleryPage() {
 
   const handleDelete = async (id: string, title: string) => {
     if (!confirm(`¿Eliminar la imagen "${title}"?`)) return;
+
+    const { data: item, error: fetchError } = await supabase
+      .from('gallery_images')
+      .select('image_url')
+      .eq('id', id)
+      .single();
+
+    if (fetchError) {
+      toast({
+        title: 'Error',
+        description: fetchError.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (item?.image_url) {
+      await fetch('/api/admin/storage/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ urls: [item.image_url] }),
+      });
+    }
+
     const { error } = await supabase.from('gallery_images').delete().eq('id', id);
     if (error) {
       toast({

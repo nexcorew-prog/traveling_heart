@@ -5,14 +5,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import { FaTimes } from 'react-icons/fa';
 import { supabase, type GalleryImage } from '@/lib/supabase';
 
-const categories = ['Todos', 'paisaje', 'aventura', 'cultura', 'gastronomia'];
-
 export default function GaleriaPage() {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [filtered, setFiltered] = useState<GalleryImage[]>([]);
   const [active, setActive] = useState('Todos');
   const [loading, setLoading] = useState(true);
   const [lightbox, setLightbox] = useState<string | null>(null);
+
+  const categories = ['Todos', ...Array.from(new Set(images.map((img) => img.category).filter(Boolean)))];
 
   useEffect(() => {
     (async () => {

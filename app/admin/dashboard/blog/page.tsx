@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { FaPlus, FaEdit, FaTrash, FaTimes, FaSave, FaNewspaper } from 'react-icons/fa';
-import { supabase, type BlogPost } from '@/lib/supabase';
+import { supabase, type BlogPost, compressImage } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 const emptyForm = {
@@ -23,6 +23,8 @@ export default function AdminBlogPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [saving, setSaving] = useState(false);
 
   const loadPosts = async () => {
@@ -38,8 +40,19 @@ export default function AdminBlogPage() {
     loadPosts();
   }, []);
 
+  useEffect(() => {
+    if (imageFile) {
+      const url = URL.createObjectURL(imageFile);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
+    }
+    setPreviewUrl(form.image || '');
+  }, [imageFile, form.image]);
+
   const openCreate = () => {
     setForm(emptyForm);
+    setImageFile(null);
+    setPreviewUrl('');
     setEditingId(null);
     setShowForm(true);
   };
@@ -54,6 +67,8 @@ export default function AdminBlogPage() {
       tags: post.tags.length ? post.tags : [''],
       status: post.status,
     });
+    setImageFile(null);
+    setPreviewUrl(post.image || '');
     setEditingId(post.id);
     setShowForm(true);
   };
@@ -61,11 +76,45 @@ export default function AdminBlogPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+
+    let finalImageUrl = form.image;
+    if (imageFile) {
+      try {
+        const compressed = await compressImage(imageFile, 1600, 0.78);
+        const fileExt = (imageFile.name.split('.').pop() || 'jpg').replace(/\?.*$/, '');
+        const fileName = `${Date.now()}_${form.title.replace(/\s+/g, '_')}.${fileExt}`;
+
+        const formData = new FormData();
+        formData.append('file', compressed);
+        formData.append('bucket', 'gallery');
+        formData.append('folder', 'blog');
+        formData.append('fileName', fileName);
+
+        const uploadResponse = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResponse.ok || uploadResult.error) {
+          throw new Error(uploadResult.error || 'Error en la subida de la imagen.');
+        }
+        finalImageUrl = uploadResult.publicUrl;
+      } catch (err: any) {
+        toast({
+          title: 'Error al subir imagen',
+          description: err?.message || 'No se pudo subir la imagen.',
+          variant: 'destructive',
+        });
+        setSaving(false);
+        return;
+      }
+    }
+
     const payload = {
       title: form.title,
       excerpt: form.excerpt,
       content: form.content,
-      image: form.image,
+      image: finalImageUrl,
       author: form.author,
       tags: form.tags.filter((t) => t.trim()),
       status: form.status,
@@ -215,15 +264,36 @@ export default function AdminBlogPage() {
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary resize-none"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold text-brand-dark mb-1.5">URL de imagen</label>
-                  <input
-                    type="text"
-                    value={form.image}
-                    onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                  />
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-brand-dark mb-1.5">Subir imagen</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+                      className="w-full text-sm"
+                    />
+                    <p className="mt-2 text-xs text-brand-dark/50">
+                      Selecciona un archivo para subir o usa una URL en el campo abajo. Si subes un archivo, este tendrá prioridad.
+                    </p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-brand-dark mb-1.5">URL de imagen</label>
+                    <input
+                      type="text"
+                      value={form.image}
+                      onChange={(e) => setForm({ ...form, image: e.target.value })}
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
+                      placeholder="https://..."
+                    />
+                  </div>
                 </div>
+                {previewUrl ? (
+                  <div className="rounded-3xl overflow-hidden border border-gray-200 bg-gray-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={previewUrl} alt="Vista previa" className="w-full h-56 object-cover" />
+                  </div>
+                ) : null}
                 <div>
                   <label className="block text-sm font-semibold text-brand-dark mb-1.5">Etiquetas (coma)</label>
                   <input

@@ -6,14 +6,17 @@ import { motion, AnimatePresence } from 'motion/react';
 import { FaMapMarkerAlt, FaClock, FaArrowRight, FaSearch } from 'react-icons/fa';
 import { supabase, type Tour } from '@/lib/supabase';
 
-const categories = ['Todos', 'Aventura', 'Cultura', 'Naturaleza', 'Gastronomía'];
-
 export default function DestinosPage() {
   const [tours, setTours] = useState<Tour[]>([]);
   const [filtered, setFiltered] = useState<Tour[]>([]);
   const [active, setActive] = useState('Todos');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const categories = [
+    'Todos',
+    ...Array.from(new Set(tours.map((tour) => tour.category).filter(Boolean))).slice(-4),
+  ];
 
   useEffect(() => {
     (async () => {

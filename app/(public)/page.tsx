@@ -69,7 +69,12 @@ export default function HomePage() {
   useEffect(() => {
     (async () => {
       const [toursRes, testRes, blogRes] = await Promise.all([
-        supabase.from('tours').select('*').eq('featured', true).limit(3),
+        supabase
+          .from('tours')
+          .select('*')
+          .eq('status', 'activo')
+          .order('created_at', { ascending: false })
+          .limit(3),
         supabase.from('testimonials').select('*').limit(5),
         supabase.from('blog_posts').select('*').order('published_date', { ascending: false }).limit(3),
       ]);
