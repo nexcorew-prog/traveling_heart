@@ -10,12 +10,6 @@ const playfair = Playfair_Display({
   display: 'swap',
   weight: ['400', '500', '600', '700', '800', '900'],
 });
-const bebas = Bebas_Neue({
-  subsets: ['latin'],
-  variable: '--font-bebas',
-  display: 'swap',
-  weight: '400',
-});
 
 export const metadata: Metadata = {
   title: 'Traveling Heart | Experiencias auténticas en La Paz, Bolivia',
@@ -48,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.variable} ${playfair.variable} ${bebas.variable} font-sans`}
+        className={`${inter.variable} ${playfair.variable} font-sans`}
       >
         {children}
         <Toaster />
