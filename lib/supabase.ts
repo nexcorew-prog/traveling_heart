@@ -168,9 +168,9 @@ export async function uploadImageToStorage(
     );
   }
 
-  const { data: urlData, error: urlError } = supabase.storage.from(bucket).getPublicUrl(path);
-  if (urlError) {
-    throw new Error(`No se pudo generar la URL pública: ${urlError.message}`);
+  const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
+  if (!urlData?.publicUrl) {
+    throw new Error('No se pudo generar la URL pública.');
   }
 
   return { publicUrl: urlData.publicUrl, path };
