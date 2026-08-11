@@ -1,6 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Playfair_Display, Bebas_Neue } from 'next/font/google';
+import { Inter, Playfair_Display } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
