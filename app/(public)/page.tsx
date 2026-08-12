@@ -310,10 +310,10 @@ export default function HomePage() {
                 <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-primary flex items-center justify-center">
                   <item.icon className="text-white text-2xl" />
                 </div>
-                <h3 className="font-display font-semibold text-lg text-brand-dark mb-3">
+                <h3 className="font-display font-semibold text-lg text-white mb-3">
                   {item.title}
                 </h3>
-                <p className="text-brand-dark/60 text-sm leading-relaxed">
+                <p className="text-white/60 text-sm leading-relaxed">
                   {item.desc}
                 </p>
               </motion.div>

@@ -63,7 +63,7 @@ export default function AdminSidebar() {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="p-6 border-b border-white/15">
-        <Link href="/admin/dashboard" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <FaHeart className="text-white text-2xl" />
           <span className="font-display font-bold text-xl text-white">
             Traveling Heart
