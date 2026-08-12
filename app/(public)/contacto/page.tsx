@@ -280,7 +280,15 @@ export default function ContactoPage() {
                 <p className="text-brand-dark/60 text-sm font-medium">
                   La Paz, Bolivia
                 </p>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3825.572784719947!2d-68.1383152!3d-16.497156099999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x915f216ccf45d40d%3A0x2b3eb87cdad889f2!2sTraveling%20Heart%20Tour%20Operadora!5e0!3m2!1ses-419!2sbo!4v1786487165289!5m2!1ses-419!2sbo" width="600" height="450" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3825.572784719947!2d-68.1383152!3d-16.497156099999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x915f216ccf45d40d%3A0x2b3eb87cdad889f2!2sTraveling%20Heart%20Tour%20Operadora!5e0!3m2!1ses-419!2sbo!4v1786487165289!5m2!1ses-419!2sbo"
+                  width="600"
+                  height="450"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
               </div>
             </div>
           </motion.div>
