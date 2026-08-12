@@ -110,41 +110,67 @@ export default function HomePage() {
           </Swiper>
         </div>
         <div className="hero-overlay-enhanced absolute inset-0 z-10 pointer-events-none" />
+        <div className="hero-floating-orb hero-floating-orb-one" />
+        <div className="hero-floating-orb hero-floating-orb-two" />
+        <div className="hero-floating-orb hero-floating-orb-three" />
 
         <div className="relative z-30 flex items-center justify-center h-full px-4">
           <div className="text-center max-w-4xl">
             <motion.div
-              initial={false}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-sm rounded-full mb-6">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: -12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="hero-badge inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-md rounded-full mb-6 border border-white/20"
+              >
                 <FaHeart className="text-brand-accent" />
                 <span className="text-white text-sm font-medium">
                   Agencia de turismo en La Paz, Bolivia
                 </span>
-              </div>
-              <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl text-white leading-tight mb-6 text-balance">
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+                className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl text-white leading-tight mb-6 text-balance"
+              >
                 Viaja con el{' '}
-                <span className="text-brand-accent">corazón</span>
-              </h1>
-              <p className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+                <span className="text-brand-accent hero-title-accent">corazón</span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
+                className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed"
+              >
                 Experiencias auténticas en Bolivia.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7, ease: 'easeOut' }}
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+              >
                 <Link
                   href="/destinos"
-                  className="px-8 py-4 bg-brand-primary text-white rounded-full font-semibold text-lg shadow-xl shadow-brand-primary/40 hover:bg-brand-secondary transition-all hover:scale-105"
+                  className="hero-button-primary px-8 py-4 bg-brand-primary text-white rounded-full font-semibold text-lg shadow-xl shadow-brand-primary/40 hover:bg-brand-secondary transition-all hover:scale-105"
                 >
                   Ver Destinos
                 </Link>
                 <Link
                   href="/contacto"
-                  className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-brand-primary transition-all"
+                  className="hero-button-secondary px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-brand-primary transition-all"
                 >
                   Contáctanos
                 </Link>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -185,10 +211,11 @@ export default function HomePage() {
               {featuredTours.map((tour, i) => (
                 <motion.div
                   key={tour.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 }}
+                  initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: i * 0.15, duration: 0.6, ease: 'easeOut' }}
+                  whileHover={{ y: -8, scale: 1.01 }}
                 >
                   <div className="group block">
                     <div className="relative h-96 rounded-2xl overflow-hidden shadow-lg">
@@ -273,10 +300,11 @@ export default function HomePage() {
             {whyUs.map((item, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 35, scale: 0.96 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ delay: i * 0.12, duration: 0.55, ease: 'easeOut' }}
+                whileHover={{ y: -8, scale: 1.02 }}
                 className="rounded-2xl border border-white/70 bg-white/55 p-8 shadow-[0_16px_42px_rgba(75,47,24,0.18)] backdrop-blur-md hover:shadow-xl transition-shadow text-center"
               >
                 <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-primary flex items-center justify-center">
@@ -303,10 +331,11 @@ export default function HomePage() {
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, scale: 0.8, y: 18 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ delay: i * 0.12, duration: 0.55, ease: 'easeOut' }}
+                whileHover={{ y: -6, scale: 1.03 }}
                 className="text-center text-white"
               >
                 <stat.icon className="text-brand-accent text-3xl mx-auto mb-3" />
@@ -342,8 +371,16 @@ export default function HomePage() {
 
           {testimonials.length > 0 && (
             <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
-              {testimonials.map((t) => (
-                  <div key={t.id} className="rounded-3xl border border-white/70 bg-white/65 p-8 shadow-[0_18px_50px_rgba(89,56,29,0.10)] backdrop-blur-xl h-full flex flex-col transition-transform duration-300 hover:-translate-y-1">
+              {testimonials.map((t, index) => (
+                  <motion.div
+                    key={t.id}
+                    initial={{ opacity: 0, y: 32, scale: 0.96 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ delay: index * 0.1, duration: 0.5, ease: 'easeOut' }}
+                    whileHover={{ y: -8, scale: 1.01 }}
+                    className="rounded-3xl border border-white/70 bg-white/65 p-8 shadow-[0_18px_50px_rgba(89,56,29,0.10)] backdrop-blur-xl h-full flex flex-col transition-transform duration-300"
+                  >
                     <FaQuoteLeft className="text-brand-accent text-3xl mb-4" />
                     <p className="text-brand-dark/70 leading-relaxed flex-1 mb-6">
                       "{t.comment}"
@@ -373,7 +410,7 @@ export default function HomePage() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
               ))}
             </div>
           )}
@@ -401,10 +438,11 @@ export default function HomePage() {
             {blogPosts.map((post, i) => (
               <motion.div
                 key={post.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 32, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: i * 0.12, duration: 0.55, ease: 'easeOut' }}
+                whileHover={{ y: -8, scale: 1.01 }}
               >
                 <Link href="/blog" className="group block">
                   <article className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">

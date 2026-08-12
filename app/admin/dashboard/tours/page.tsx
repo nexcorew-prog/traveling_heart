@@ -495,74 +495,118 @@ export default function AdminToursPage() {
 
                 {/* List fields */}
                 {([
-                  { field: 'itinerary' as const, label: 'Itinerario (día a día)' },
-                  { field: 'includes' as const, label: 'Qué incluye' },
-                  { field: 'images' as const, label: 'URLs de imágenes' },
-                  { field: 'available_dates' as const, label: 'Fechas disponibles (YYYY-MM-DD)' },
-                ]).map(({ field, label }) => (
-                  <div key={field}>
-                    <label className="block text-sm font-semibold text-brand-dark mb-1.5">
-                      {label}
-                    </label>
+                  { field: 'itinerary' as const, label: 'Itinerario', helper: 'Añade cada etapa del recorrido' },
+                  { field: 'includes' as const, label: 'Qué incluye', helper: 'Lista lo que ya viene incluido' },
+                  { field: 'available_dates' as const, label: 'Fechas disponibles', helper: 'Ej: 2026-09-20' },
+                ]).map(({ field, label, helper }) => (
+                  <div key={field} className="rounded-2xl border border-gray-200 bg-gray-50/80 p-4">
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div>
+                        <p className="text-sm font-semibold text-brand-dark">{label}</p>
+                        <p className="text-xs text-brand-dark/50">{helper}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => addListItem(field)}
+                        className="px-3 py-1.5 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-semibold hover:bg-brand-primary/15 transition-colors"
+                      >
+                        + Añadir
+                      </button>
+                    </div>
+
                     <div className="space-y-2">
                       {form[field].map((item, i) => (
                         <div key={i} className="flex gap-2 items-center">
-                          {field === 'images' ? (
-                            <>
-                              <input
-                                type="text"
-                                value={item}
-                                onChange={(e) => updateListField(field, i, e.target.value)}
-                                placeholder="URL de imagen o deja vacío si subirás un archivo"
-                                className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                              />
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleImageFileChange(i, e.target.files?.[0] ?? null)}
-                                className="w-36 text-sm"
-                              />
-                              {(imagePreviews[i] || item) && (
-                                <div className="w-20 h-12 rounded overflow-hidden">
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={imagePreviews[i] ?? item}
-                                    alt={`preview-${i}`}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              )}
-                            </>
-                          ) : (
-                            <input
-                              type="text"
-                              value={item}
-                              onChange={(e) => updateListField(field, i, e.target.value)}
-                              className="flex-1 px-4 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
-                            />
-                          )}
+                          <input
+                            type="text"
+                            value={item}
+                            onChange={(e) => updateListField(field, i, e.target.value)}
+                            placeholder={field === 'available_dates' ? 'YYYY-MM-DD' : 'Escribe aquí'}
+                            className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm outline-none focus:border-brand-primary"
+                          />
 
                           {form[field].length > 1 && (
                             <button
                               type="button"
                               onClick={() => removeListItem(field, i)}
-                              className="w-10 h-10 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center shrink-0"
+                              className="w-9 h-9 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center shrink-0"
                             >
                               <FaTimes size={12} />
                             </button>
                           )}
                         </div>
                       ))}
-                      <button
-                        type="button"
-                        onClick={() => addListItem(field)}
-                        className="text-sm text-brand-primary font-semibold hover:underline"
-                      >
-                        + Añadir
-                      </button>
                     </div>
                   </div>
                 ))}
+
+                <div className="rounded-2xl border border-orange-200 bg-orange-50/50 p-4">
+                  <div className="flex items-center justify-between gap-3 mb-3">
+                    <div>
+                      <p className="text-sm font-semibold text-brand-dark">Imágenes del tour</p>
+                      <p className="text-xs text-brand-dark/50">Sube fotos o pega una URL. Se muestran en la galería del tour.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => addListItem('images')}
+                      className="px-3 py-1.5 rounded-full bg-brand-accent text-brand-dark text-xs font-semibold hover:brightness-95 transition-all"
+                    >
+                      + Agregar foto
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {form.images.map((item, i) => (
+                      <div key={i} className="rounded-xl border border-orange-200 bg-white p-3">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-xs font-semibold uppercase tracking-wide text-brand-dark/60">
+                            Foto {i + 1}
+                          </span>
+                          {form.images.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeListItem('images', i)}
+                              className="text-xs text-red-600 hover:text-red-700 font-semibold"
+                            >
+                              Eliminar
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="grid md:grid-cols-[1fr_160px] gap-3">
+                          <input
+                            type="text"
+                            value={item}
+                            onChange={(e) => updateListField('images', i, e.target.value)}
+                            placeholder="https://ejemplo.com/imagen.jpg"
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-brand-primary"
+                          />
+
+                          <label className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-brand-primary/60 bg-brand-primary/5 px-3 py-2.5 text-center text-xs font-semibold text-brand-primary hover:bg-brand-primary/10 transition-colors">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => handleImageFileChange(i, e.target.files?.[0] ?? null)}
+                            />
+                            {imagePreviews[i] ? 'Cambiar' : 'Subir archivo'}
+                          </label>
+                        </div>
+
+                        {(imagePreviews[i] || item) && (
+                          <div className="mt-3 overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={imagePreviews[i] ?? item}
+                              alt={`preview-${i}`}
+                              className="h-28 w-full object-cover"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 <div className="flex items-center gap-6">
                   <label className="flex items-center gap-2 text-sm font-semibold text-brand-dark">

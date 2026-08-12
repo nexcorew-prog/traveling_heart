@@ -51,6 +51,7 @@ export default function TourDetailPage() {
   const router = useRouter();
   const [tour, setTour] = useState<Tour | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     if (!id) return;
@@ -97,26 +98,57 @@ export default function TourDetailPage() {
   return (
     <div className="pt-20">
       {/* Gallery */}
-      <section className="px-4 sm:px-6 lg:px-8 py-8">
+      <section className="relative px-4 sm:px-6 lg:px-8 py-8 overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-orange-50 via-white to-white" />
         <div className="max-w-7xl mx-auto">
-          <Swiper
-            modules={[Navigation, Pagination]}
-            navigation
-            pagination={{ clickable: true }}
-            loop
-            className="rounded-2xl overflow-hidden h-[400px] sm:h-[500px] shadow-lg"
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+            className="space-y-4"
           >
-            {tour.images.map((img, i) => (
-              <SwiperSlide key={i}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img}
-                  alt={`${tour.name} - ${i + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+            <div className="relative overflow-hidden rounded-[28px] shadow-[0_24px_60px_rgba(119,64,16,0.16)] bg-white">
+              <motion.img
+                key={activeImage}
+                src={tour.images[activeImage]}
+                alt={`${tour.name} - ${activeImage + 1}`}
+                initial={{ opacity: 0, scale: 1.08, x: 20 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className="w-full h-[400px] sm:h-[550px] object-cover object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+              <div className="absolute bottom-5 left-5 flex flex-wrap gap-2">
+                <span className="px-3 py-1 bg-brand-accent text-brand-dark rounded-full text-xs font-bold uppercase">
+                  {tour.category}
+                </span>
+                <span className="px-3 py-1 bg-white/15 backdrop-blur-sm text-white rounded-full text-xs font-semibold">
+                  {tour.destination}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-3">
+              {tour.images.map((img, i) => (
+                <motion.button
+                  key={`${img}-${i}`}
+                  type="button"
+                  onClick={() => setActiveImage(i)}
+                  whileHover={{ y: -3, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`overflow-hidden rounded-2xl border-2 transition-all ${
+                    activeImage === i ? 'border-brand-primary shadow-md' : 'border-transparent opacity-80'
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`${tour.name} - vista ${i + 1}`}
+                    className="h-24 w-full object-cover"
+                  />
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -126,8 +158,10 @@ export default function TourDetailPage() {
           {/* Main */}
           <div className="lg:col-span-2 space-y-8">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="px-3 py-1 bg-brand-accent text-brand-dark rounded-full text-xs font-bold uppercase">
@@ -145,7 +179,7 @@ export default function TourDetailPage() {
                   <FaClock /> {tour.duration}
                 </span>
                 <span className="flex items-center gap-2">
-                  <FaStar className="text-brand-accent" /> 4.9 (128 reseñas)
+                  <FaStar className="text-brand-accent" /> 
                 </span>
                 <span className="flex items-center gap-2">
                   <FaUsers /> Grupo pequeño
@@ -157,18 +191,23 @@ export default function TourDetailPage() {
             </motion.div>
 
             {/* Itinerary */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
               <h2 className="font-display font-bold text-2xl text-brand-primary mb-5">
-                Itinerario
+                {tour.itinerary.length > 0 ? 'Itinerario' : ''}
               </h2>
               <div className="space-y-4">
                 {tour.itinerary.map((item, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
+                    initial={{ opacity: 0, x: -22, y: 10 }}
+                    whileInView={{ opacity: 1, x: 0, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ delay: i * 0.08, duration: 0.45, ease: 'easeOut' }}
                     className="flex gap-4 items-start"
                   >
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center font-bold text-sm">
@@ -182,10 +221,15 @@ export default function TourDetailPage() {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Includes */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
               <h2 className="font-display font-bold text-2xl text-brand-primary mb-5">
                 Qué incluye
               </h2>
@@ -193,10 +237,10 @@ export default function TourDetailPage() {
                 {tour.includes.map((item, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.05 }}
+                    initial={{ opacity: 0, scale: 0.95, x: i % 2 === 0 ? -8 : 8 }}
+                    whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ delay: i * 0.06, duration: 0.42, ease: 'easeOut' }}
                     className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm"
                   >
                     <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
@@ -206,10 +250,15 @@ export default function TourDetailPage() {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* FAQ */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
               <h2 className="font-display font-bold text-2xl text-brand-primary mb-5">
                 Preguntas frecuentes
               </h2>
@@ -229,14 +278,17 @@ export default function TourDetailPage() {
                   </AccordionItem>
                 ))}
               </Accordion>
-            </div>
+            </motion.div>
           </div>
 
           {/* Sidebar - Booking */}
           <div className="lg:col-span-1">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 26, scale: 0.98 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.65, ease: 'easeOut', delay: 0.1 }}
+              whileHover={{ y: -6, scale: 1.01 }}
               className="sticky top-28 bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
             >
               <div className="text-center mb-6">
@@ -248,9 +300,7 @@ export default function TourDetailPage() {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <FaStar key={i} className="text-sm" />
                   ))}
-                  <span className="text-brand-dark/50 text-sm ml-1">
-                    4.9 · 128 reseñas
-                  </span>
+                  
                 </div>
               </div>
 

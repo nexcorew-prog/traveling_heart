@@ -44,7 +44,7 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between ">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <motion.div
@@ -64,7 +64,7 @@ export default function Navbar() {
               <span className="font-display font-bold text-xl text-brand-dark tracking-tight drop-shadow-sm">
                 Traveling <span className="text-brand-primary">Heart</span>
               </span> */}
-              <Image src="/logo.png" alt="Traveling Heart" width={80} height={80} />
+              <Image src="/logo.png" alt="Traveling Heart" width={140} height={140} />
             </motion.div>
           </Link>
 
@@ -74,7 +74,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors ${
+                className={`relative px-4 py-2 text-md font-bold transition-colors ${
                   pathname === link.href
                     ? 'text-brand-primary'
                     : 'text-brand-dark drop-shadow-sm hover:text-brand-primary'
