@@ -25,9 +25,9 @@ import {
 import { supabase, type Tour, type Testimonial, type BlogPost } from '@/lib/supabase';
 
 const heroSlides = [
-  'https://images.pexels.com/photos/30929501/pexels-photo-30929501.jpeg?auto=compress&cs=tinysrgb&w=1920',
-  'https://images.pexels.com/photos/36303146/pexels-photo-36303146.jpeg?auto=compress&cs=tinysrgb&w=1920',
-  'https://images.pexels.com/photos/7406503/pexels-photo-7406503.jpeg?auto=compress&cs=tinysrgb&w=1920',
+  'https://andesbrothers.com/wp-content/uploads/2021/06/abe-huayna-potosi-3d2n-8.jpg',
+  'https://images.zapnito.com/cdn-cgi/image/metadata=copyright,fit=scale-down,format=auto,quality=95/https://images.zapnito.com/uploads/rMSGSGUnQcyIOTM2oP5g_01-figure-img_1601.jpg',
+  'https://madidi.sernap.gob.bo/img/home/bg-1.png',
 ];
 
 const whyUs = [
@@ -56,8 +56,7 @@ const whyUs = [
 const stats = [
   { icon: FaUsers, value: '+2,500', label: 'Viajeros que confían en nosotros' },
   { icon: FaThumbsUp, value: '98%', label: 'De clientes nos recomiendan' },
-  { icon: FaAward, value: '+15', label: 'Años de experiencia en turismo' },
-  { icon: FaClock, value: '<30 min', label: 'Respuesta por WhatsApp' },
+  { icon: FaClock, value: '- 30 min', label: 'Respuesta por WhatsApp' },
 ];
 
 export default function HomePage() {
@@ -300,7 +299,7 @@ export default function HomePage() {
         <div className="stats-scene-image" />
         <div className="stats-scene-light" />
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
