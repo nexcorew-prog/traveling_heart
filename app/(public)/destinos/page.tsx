@@ -41,7 +41,7 @@ function DestinationCard({ tour, index }: { tour: Tour; index: number }) {
           </div>
           <div className="absolute top-3 right-3">
             <span className="px-3 py-1 bg-brand-primary text-white rounded-full text-xs font-bold">
-              Desde Bs. {tour.price}
+              Desde $ {tour.price}
             </span>
           </div>
         </div>

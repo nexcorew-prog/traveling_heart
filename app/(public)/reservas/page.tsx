@@ -65,7 +65,7 @@ export default function ReservasPage() {
     setSubmitting(true);
 
     const text = encodeURIComponent(
-      `Hola Traveling Heart, quiero reservar:\n- Tour: ${selectedTour.name}\n- Destino: ${selectedTour.destination}\n- Fecha: ${travelDate}\n- Personas: ${numPeople}\n- Nombre: ${fullName}\n- Email: ${email}\n- Teléfono: ${phone}\n- Mensaje: ${message}\n- Total: Bs. ${total}`,
+      `Hola Traveling Heart, quiero reservar:\n- Tour: ${selectedTour.name}\n- Destino: ${selectedTour.destination}\n- Fecha: ${travelDate}\n- Personas: ${numPeople}\n- Nombre: ${fullName}\n- Email: ${email}\n- Teléfono: ${phone}\n- Mensaje: ${message}\n- Total: $ ${total}`,
     );
 
     const waUrl = `https://wa.me/64292424?text=${text}`;
@@ -302,7 +302,7 @@ export default function ReservasPage() {
                   <div className="space-y-2 text-sm border-t border-gray-100 pt-4">
                     <div className="flex justify-between text-brand-dark/60">
                       <span>Precio por persona</span>
-                      <span>Bs. {selectedTour.price}</span>
+                      <span>$ {selectedTour.price}</span>
                     </div>
                     <div className="flex justify-between text-brand-dark/60">
                       <span>Personas</span>
@@ -318,7 +318,7 @@ export default function ReservasPage() {
                     )}
                     <div className="flex justify-between font-bold text-brand-primary text-lg pt-3 border-t border-gray-100">
                       <span>Total</span>
-                      <span>Bs. {total}</span>
+                      <span>$ {total}</span>
                     </div>
                   </div>
                 </>

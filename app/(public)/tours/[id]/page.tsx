@@ -294,7 +294,7 @@ export default function TourDetailPage() {
               <div className="text-center mb-6">
                 <p className="text-brand-dark/50 text-sm">Precio por persona</p>
                 <div className="font-display font-bold text-4xl text-brand-primary my-1">
-                  {tour.price}Bs.
+                  {tour.price}$
                 </div>
                 <div className="flex items-center justify-center gap-1 text-brand-accent">
                   {Array.from({ length: 5 }).map((_, i) => (

@@ -335,7 +335,7 @@ export default function AdminToursPage() {
                       {tour.destination}
                     </td>
                     <td className="px-6 py-4 text-sm font-semibold text-brand-primary">
-                      {tour.price}Bs.
+                      {tour.price}$
                     </td>
                     <td className="px-6 py-4 text-sm text-brand-dark/60">
                       {tour.duration}
