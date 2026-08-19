@@ -109,7 +109,7 @@ export default function AdminClientesPage() {
                       {c.num_reservations}
                     </td>
                     <td className="px-6 py-4 text-sm font-semibold text-brand-primary">
-                      Bs. {c.total_spent}
+                      $ {c.total_spent}
                     </td>
                     <td className="px-6 py-4 text-sm text-brand-dark/60">
                       <div className="flex items-center gap-2">
