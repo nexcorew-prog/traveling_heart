@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   title: 'Traveling Heart | Experiencias auténticas en La Paz, Bolivia',
   description:
     'Viaja con el corazón. Tours auténticos en La Paz, Tiwanaku, Yungas, Salar de Uyuni y Lago Titicaca. Guías locales, tours personalizados y precios justos.',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   keywords: [
     'La Paz Bolivia',
     'turismo Bolivia',
