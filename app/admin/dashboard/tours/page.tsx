@@ -39,6 +39,7 @@ export default function AdminToursPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [initialForm, setInitialForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [imageFilesMap, setImageFilesMap] = useState<Record<number, File | null>>({});
   const [imagePreviews, setImagePreviews] = useState<Record<number, string>>({});
@@ -62,6 +63,9 @@ export default function AdminToursPage() {
 
   const openCreate = () => {
     setForm(emptyForm);
+    setInitialForm(emptyForm);
+    setImageFilesMap({});
+    setImagePreviews({});
     setEditingId(null);
     setShowForm(true);
   };
@@ -81,8 +85,37 @@ export default function AdminToursPage() {
       status: tour.status,
       featured: tour.featured,
     });
+    setInitialForm({
+      name: tour.name,
+      destination: tour.destination,
+      category: tour.category,
+      duration: tour.duration,
+      description: tour.description,
+      itinerary: tour.itinerary.length ? tour.itinerary : [''],
+      includes: tour.includes.length ? tour.includes : [''],
+      price: tour.price,
+      images: tour.images.length ? tour.images : [''],
+      available_dates: tour.available_dates.length ? tour.available_dates : [''],
+      status: tour.status,
+      featured: tour.featured,
+    });
+    setImageFilesMap({});
+    setImagePreviews({});
     setEditingId(tour.id);
     setShowForm(true);
+  };
+
+  const closeForm = () => {
+    if (saving) return;
+
+    const hasUnsavedChanges =
+      JSON.stringify(form) !== JSON.stringify(initialForm) ||
+      Object.values(imageFilesMap).some(Boolean);
+    if (hasUnsavedChanges && !window.confirm('Hay cambios sin guardar. ¿Deseas cerrar la modal y descartarlos?')) {
+      return;
+    }
+
+    setShowForm(false);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -195,6 +228,7 @@ export default function AdminToursPage() {
     }
 
     setSaving(false);
+    setInitialForm(form);
     setShowForm(false);
     loadTours();
   };
@@ -386,7 +420,7 @@ export default function AdminToursPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center p-4 overflow-y-auto"
-            onClick={() => setShowForm(false)}
+            onClick={closeForm}
           >
             <motion.div
               initial={{ scale: 0.95, y: 20 }}
@@ -400,7 +434,7 @@ export default function AdminToursPage() {
                   {editingId ? 'Editar Tour' : 'Crear Nuevo Tour'}
                 </h2>
                 <button
-                  onClick={() => setShowForm(false)}
+                  onClick={closeForm}
                   className="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center"
                 >
                   <FaTimes />
