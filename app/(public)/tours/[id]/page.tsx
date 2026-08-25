@@ -252,6 +252,36 @@ export default function TourDetailPage() {
               </div>
             </motion.div>
 
+            {tour.excludes?.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+              >
+                <h2 className="font-display font-bold text-2xl text-brand-primary mb-5">
+                  No incluye
+                </h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {tour.excludes.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0.95, x: i % 2 === 0 ? -8 : 8 }}
+                      whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                      viewport={{ once: true, amount: 0.25 }}
+                      transition={{ delay: i * 0.06, duration: 0.42, ease: 'easeOut' }}
+                      className="flex items-center gap-3 p-3 bg-orange-50/50 rounded-xl"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-brand-accent/30 flex items-center justify-center shrink-0">
+                        <span className="text-brand-dark text-sm font-bold">-</span>
+                      </div>
+                      <span className="text-brand-dark/70 text-sm">{item}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             {/* FAQ */}
             <motion.div
               initial={{ opacity: 0, y: 18 }}

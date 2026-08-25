@@ -26,6 +26,7 @@ export type Tour = {
   description: string;
   itinerary: string[];
   includes: string[];
+  excludes: string[];
   price: number;
   images: string[];
   available_dates: string[];

@@ -22,6 +22,7 @@ const emptyForm = {
   description: '',
   itinerary: [''],
   includes: [''],
+  excludes: [''],
   price: 0,
   images: [''],
   available_dates: [''],
@@ -79,6 +80,7 @@ export default function AdminToursPage() {
       description: tour.description,
       itinerary: tour.itinerary.length ? tour.itinerary : [''],
       includes: tour.includes.length ? tour.includes : [''],
+      excludes: tour.excludes?.length ? tour.excludes : [''],
       price: tour.price,
       images: tour.images.length ? tour.images : [''],
       available_dates: tour.available_dates.length ? tour.available_dates : [''],
@@ -93,6 +95,7 @@ export default function AdminToursPage() {
       description: tour.description,
       itinerary: tour.itinerary.length ? tour.itinerary : [''],
       includes: tour.includes.length ? tour.includes : [''],
+      excludes: tour.excludes?.length ? tour.excludes : [''],
       price: tour.price,
       images: tour.images.length ? tour.images : [''],
       available_dates: tour.available_dates.length ? tour.available_dates : [''],
@@ -186,6 +189,7 @@ export default function AdminToursPage() {
       description: form.description,
       itinerary: form.itinerary.filter((x) => x.trim()),
       includes: form.includes.filter((x) => x.trim()),
+      excludes: form.excludes.filter((x) => x.trim()),
       price: Number(form.price),
       images: images.filter((x) => x.trim()),
       available_dates: form.available_dates.filter((x) => x.trim()),
@@ -266,7 +270,7 @@ export default function AdminToursPage() {
   };
 
   const updateListField = (
-    field: 'itinerary' | 'includes' | 'images' | 'available_dates',
+    field: 'itinerary' | 'includes' | 'excludes' | 'images' | 'available_dates',
     index: number,
     value: string,
   ) => {
@@ -276,11 +280,11 @@ export default function AdminToursPage() {
     }));
   };
 
-  const addListItem = (field: 'itinerary' | 'includes' | 'images' | 'available_dates') => {
+  const addListItem = (field: 'itinerary' | 'includes' | 'excludes' | 'images' | 'available_dates') => {
     setForm((prev) => ({ ...prev, [field]: [...prev[field], ''] }));
   };
 
-  const removeListItem = (field: 'itinerary' | 'includes' | 'images' | 'available_dates', index: number) => {
+  const removeListItem = (field: 'itinerary' | 'includes' | 'excludes' | 'images' | 'available_dates', index: number) => {
     setForm((prev) => ({
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index),
@@ -531,6 +535,7 @@ export default function AdminToursPage() {
                 {([
                   { field: 'itinerary' as const, label: 'Itinerario', helper: 'Añade cada etapa del recorrido' },
                   { field: 'includes' as const, label: 'Qué incluye', helper: 'Lista lo que ya viene incluido' },
+                  { field: 'excludes' as const, label: 'No incluye', helper: 'Lista los gastos o servicios no incluidos' },
                   { field: 'available_dates' as const, label: 'Fechas disponibles', helper: 'Ej: 2026-09-20' },
                 ]).map(({ field, label, helper }) => (
                   <div key={field} className="rounded-2xl border border-gray-200 bg-gray-50/80 p-4">
