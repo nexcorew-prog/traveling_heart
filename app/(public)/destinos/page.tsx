@@ -83,7 +83,7 @@ export default function DestinosPage() {
 
   const categories = [
     'Todos',
-    ...Array.from(new Set(tours.map((tour) => tour.category).filter(Boolean))).slice(-4),
+    ...Array.from(new Set(tours.map((tour) => tour.category).filter(Boolean))),
   ];
 
   useEffect(() => {
